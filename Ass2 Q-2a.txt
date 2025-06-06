@@ -1,0 +1,63 @@
+#include <bits/stdc++.h>
+using namespace std;
+#define endl '\n'
+typedef long long ll;
+const int MOD = 998244353;
+const int N=1e5+10;
+vector<ll>power(N);
+
+void solve() {
+    power[0] = 1;
+    for(int i=1;i<N;i++) {
+        power[i] = (power[i-1]*2)%MOD;
+    }
+}
+
+int main() {
+    ios_base::sync_with_stdio(false);
+    cin.tie(nullptr);
+    solve();
+    int tc;
+    cin >> tc;
+    while (tc--) {
+        int n;
+        cin>>n;
+        vector<int>p(n),q(n);
+        for(int i=0;i<n;i++) cin>>p[i];
+        for(int i=0;i<n;i++) cin>>q[i];
+        vector<int>p1(n),p2(n);
+        for(int i=0;i<n;i++){
+            p1[p[i]]=i;
+            p2[q[i]]=i;
+        }
+        vector<int>pmx(n),qmx(n);
+        pmx[0]=p[0];
+        qmx[0]=q[0];
+        for(int i=1;i<n;i++){
+            pmx[i]=max(pmx[i-1],p[i]);
+            qmx[i]=max(qmx[i-1],q[i]);
+        }
+
+        for(int i=0;i<n;i++){
+            int v1=pmx[i];
+            int v2=qmx[i];
+            int ad1,ad2;
+            if(v1>v2){
+                ad1=v1;
+                ad2=q[i-p1[v1]];
+            }
+            else if(v1<v2){
+                ad1=v2;
+                ad2=p[i-p2[v2]];
+            }
+            else{
+                ad1=v1;
+                int val1=q[i-p1[ad1]];
+                int val2=p[i-p2[ad1]];
+                ad2=max(val1,val2);
+            }
+            cout<<(power[ad1]+power[ad2])%MOD<<' ';
+        }
+        cout<<endl;
+    }
+}
